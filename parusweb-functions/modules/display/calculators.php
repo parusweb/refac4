@@ -854,18 +854,18 @@ document.addEventListener('DOMContentLoaded', function() {
         const showThickness = <?php echo $show_thickness ? 'true' : 'false'; ?>;
 
         let html = `Площадь 1 шт: <b>${areaPerItem.toFixed(3)} м²</b><br>`;
-        html += `Общая площадь: <b>${totalArea.toFixed(3)} м²</b> (${quantity} шт)<br>`;
+        //html += `Общая площадь: <b>${totalArea.toFixed(3)} м²</b> (${quantity} шт)<br>`;
         if (showThickness) { html += `Толщина: <b>40мм</b><br>`; }
         html += `Цена за 1 шт: <b>${pricePerItem.toFixed(2)} ₽</b><br>`;
         html += `<br>`;
-        html += `Стоимость материала: <b>${materialPrice.toFixed(2)} ₽</b><br>`;
+        //html += `Стоимость материала: <b>${materialPrice.toFixed(2)} ₽</b><br>`;
 
         if (paintingCost > 0) {
-            html += `Стоимость покраски: <b>${paintingCost.toFixed(2)} ₽</b><br>`;
+            //html += `Стоимость покраски: <b>${paintingCost.toFixed(2)} ₽</b><br>`;
         }
 
         if (shapeExtraTotal > 0) {
-            html += `Стоимость верхнего спила: <b>${shapeExtraTotal.toFixed(2)} ₽</b><br>`;
+            //html += `Стоимость верхнего спила: <b>${shapeExtraTotal.toFixed(2)} ₽</b><br>`;
         }
 
         html += `<strong>Итого: <b>${grandTotal.toFixed(2)} ₽</b></strong>`;
