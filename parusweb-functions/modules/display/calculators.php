@@ -903,19 +903,22 @@ document.addEventListener('DOMContentLoaded', function() {
         const faskaSelectedImage = document.getElementById('faska_selected_image');
         const changeFaskaBtn = document.getElementById('change_faska_btn');
         
-        faskaInputs.forEach(input => {
-            input.addEventListener('change', function() {
-                if (this.checked) {
-                    faskaGrid.style.display = 'none';
-                    faskaSelected.style.display = 'block';
-                    
-                    faskaSelectedName.textContent = this.value;
-                    faskaSelectedImage.src = this.dataset.image;
-                    faskaSelectedImage.alt = this.value;
-                }
-                updateMultiplierCalc();
-            });
-        });
+faskaInputs.forEach(input => {
+    input.addEventListener('change', function() {
+        if (this.checked) {
+            faskaGrid.style.display = 'none';
+            faskaSelected.style.display = 'block';
+            
+            faskaSelectedName.textContent = this.value;
+            faskaSelectedImage.src = this.dataset.image;
+            faskaSelectedImage.alt = this.value;
+            
+            // ДОБАВЛЕНО: Сохраняем изображение в скрытое поле
+            createHiddenField('selected_faska_image', this.dataset.image);
+        }
+        updateMultiplierCalc();
+    });
+});
         
         if (changeFaskaBtn) {
             changeFaskaBtn.addEventListener('click', function() {
