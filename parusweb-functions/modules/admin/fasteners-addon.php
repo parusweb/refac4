@@ -236,22 +236,55 @@ function parusweb_auto_add_fastener_to_cart($cart_item_key, $product_id, $quanti
             $packages_needed = $total_fasteners;
         }
         
-        // Добавляем крепеж в корзину
-        $fastener_cart_data = [
-            '_auto_added_fastener' => true,
-            '_parent_product_id' => $product_id,
-            '_parent_cart_key' => $cart_item_key,
-            '_fastener_calc_details' => json_encode([
-                'area' => $area,
-                'board_width' => $board_width,
-                'fasteners_per_sqm' => $fasteners_per_sqm,
-                'total_fasteners' => $total_fasteners,
-                'package_qty' => $package_qty,
-                'packages_needed' => $packages_needed,
-            ]),
-        ];
-        
-        WC()->cart->add_to_cart($fastener_product_id, $packages_needed, 0, [], $fastener_cart_data);
+// Добавляем крепеж в корзину
+$fastener_cart_data = [
+    '_auto_added_fastener' => true,
+    '_parent_product_id' => $product_id,
+    '_parent_cart_key' => $cart_item_key,
+    '_fastener_calc_details' => json_encode([
+        'area' => $area,
+        'board_width' => $board_width,
+        'fasteners_per_sqm' => $fasteners_per_sqm,
+        'total_fasteners' => $total_fasteners,
+        'package_qty' => $package_qty,
+        'packages_needed' => $packages_needed,
+    ]),
+];
+
+// ==============================
+// КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ START
+// ==============================
+// Сохраняем данные покраски основного товара
+$saved_painting = [];
+$painting_keys = [
+    'painting_service_key',
+    'painting_service_id', 
+    'painting_service_name',
+    'painting_service_total_cost',
+    'painting_service_cost',
+    'painting_service_price_per_m2',
+    'painting_service_area'
+];
+
+foreach ($painting_keys as $key) {
+    if (isset($_POST[$key])) {
+        $saved_painting[$key] = $_POST[$key];
+        unset($_POST[$key]); // Временно удаляем
+    }
+}
+// ==============================
+// КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ END
+// ==============================
+
+$fastener_categories = [77, 299, 300, 80, 123]; // Крепеж
+$lkm_categories = []; // ЛКМ
+
+WC()->cart->add_to_cart($fastener_product_id, $packages_needed, 0, [], $fastener_cart_data);
+
+// Восстанавливаем данные покраски для основного товара
+foreach ($saved_painting as $key => $value) {
+    $_POST[$key] = $value;
+}
     }
 }
 add_action('woocommerce_add_to_cart', 'parusweb_auto_add_fastener_to_cart', 10, 6);
