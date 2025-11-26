@@ -671,9 +671,42 @@ function pw_add_fastener_to_cart($cart_item_key, $product_id, $quantity, $variat
         }
     }
     
+    // ==============================
+    // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ START
+    // ==============================
+    // Сохраняем данные покраски основного товара
+    $saved_painting = [];
+    $painting_keys = [
+        'painting_service_key',
+        'painting_service_id', 
+        'painting_service_name',
+        'painting_service_total_cost',
+        'painting_service_cost',
+        'painting_service_price_per_m2',
+        'painting_service_area'
+    ];
+    
+    foreach ($painting_keys as $key) {
+        if (isset($_POST[$key])) {
+            $saved_painting[$key] = $_POST[$key];
+            unset($_POST[$key]); // Временно удаляем
+        }
+    }
+    // ==============================
+    // КРИТИЧЕСКОЕ ИСПРАВЛЕНИЕ END
+    // ==============================
+    
+    
+    
+    
     $GLOBALS['pw_fastener_adding'] = true;
     WC()->cart->add_to_cart($fastener_id, $fastener_qty, 0, array(), array('added_with_product' => $product_id));
     $GLOBALS['pw_fastener_adding'] = false;
+    
+    // Восстанавливаем данные покраски для основного товара
+    foreach ($saved_painting as $key => $value) {
+        $_POST[$key] = $value;
+    }
 }
 
 add_filter('woocommerce_cart_item_name', 'pw_fastener_cart_label', 10, 3);
