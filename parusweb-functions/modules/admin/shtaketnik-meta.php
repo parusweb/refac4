@@ -30,7 +30,7 @@ function parusweb_add_shtaketnik_shape_prices() {
     }
     
     echo '<div class="options_group">';
-    echo '<h4 style="padding-left: 12px; color: #0073aa; border-bottom: 2px solid #0073aa; padding-bottom: 10px; margin-bottom: 15px;">🔺 Цены за форму верха штакетника</h4>';
+    echo '<h4 style="padding-left: 12px; color: #0073aa; border-bottom: 2px solid #0073aa; padding-bottom: 10px; margin-bottom: 15px;">Цены за форму верха штакетника</h4>';
     
     // Поле: Цена за полукруглую форму
     woocommerce_wp_text_input([
@@ -66,7 +66,7 @@ function parusweb_add_shtaketnik_shape_prices() {
     ]);
     
     echo '<p class="form-field" style="padding-left: 12px; color: #666; font-style: italic; margin-top: 10px;">';
-    echo '💡 Эти цены добавляются к базовой стоимости товара при выборе соответствующей формы верха в калькуляторе.';
+    echo 'Эти цены добавляются к базовой стоимости товара при выборе соответствующей формы верха в калькуляторе.';
     echo '</p>';
     
     echo '</div>';
