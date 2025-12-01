@@ -332,34 +332,7 @@ add_action('woocommerce_remove_cart_item', 'parusweb_remove_fastener_with_parent
  * Обновление количества крепежа при изменении количества основного товара
  */
 function parusweb_update_fastener_quantity($cart_item_key, $quantity, $old_quantity, $cart) {
-    $cart_item = $cart->get_cart_item($cart_item_key);
-    
-    if (!$cart_item) {
-        return;
-    }
-    
-    // Если у товара есть данные калькулятора, пересчитываем крепеж
-    $fastener_settings = parusweb_get_fastener_settings_for_product($cart_item['product_id']);
-    
-    if (!$fastener_settings) {
-        return;
-    }
-    
-    // Ищем связанный крепеж и обновляем его количество
-    foreach ($cart->get_cart() as $item_key => $item) {
-        if (isset($item['_parent_cart_key']) && $item['_parent_cart_key'] === $cart_item_key) {
-            // Пересчитываем количество крепежа
-            if (isset($item['_fastener_calc_details'])) {
-                $details = json_decode($item['_fastener_calc_details'], true);
-                
-                if ($details && isset($details['packages_needed'])) {
-                    // Обновляем количество пропорционально
-                    $new_fastener_qty = ceil(($details['packages_needed'] / $old_quantity) * $quantity);
-                    $cart->set_quantity($item_key, $new_fastener_qty, false);
-                }
-            }
-        }
-    }
+    return;
 }
 add_action('woocommerce_after_cart_item_quantity_update', 'parusweb_update_fastener_quantity', 10, 4);
 
