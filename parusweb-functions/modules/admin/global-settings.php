@@ -310,9 +310,9 @@ function parusweb_render_delivery_settings() {
                 <th scope="row">Базовая точка (адрес)</th>
                 <td>
                     <input type="text" name="parusweb_delivery_base_point" 
-                           value="<?php echo esc_attr(get_option('parusweb_delivery_base_point', 'г. Москва, ул. Примерная, д. 1')); ?>" 
+                           value="<?php echo esc_attr(get_option('parusweb_delivery_base_point', 'г. Санкт-Петербург Выборгское шоссе 369 к 6 лит А пом 5Н ')); ?>" 
                            class="regular-text" />
-                    <p class="description">Адрес вашего склада или магазина</p>
+                    <p class="description">Адрес склада</p>
                 </td>
             </tr>
             
@@ -320,9 +320,9 @@ function parusweb_render_delivery_settings() {
                 <th scope="row">Базовая цена доставки (₽)</th>
                 <td>
                     <input type="number" name="parusweb_delivery_base_price" 
-                           value="<?php echo esc_attr(get_option('parusweb_delivery_base_price', 1500)); ?>" 
+                           value="<?php echo esc_attr(get_option('parusweb_delivery_base_price', 6000)); ?>" 
                            min="0" step="100" style="width: 150px;" />
-                    <p class="description">Стоимость доставки в пределах МКАД</p>
+                    <p class="description">Стоимость доставки от 6000р. (200р./1км)</p>
                 </td>
             </tr>
             
@@ -330,9 +330,9 @@ function parusweb_render_delivery_settings() {
                 <th scope="row">Цена за км (₽)</th>
                 <td>
                     <input type="number" name="parusweb_delivery_price_per_km" 
-                           value="<?php echo esc_attr(get_option('parusweb_delivery_price_per_km', 50)); ?>" 
+                           value="<?php echo esc_attr(get_option('parusweb_delivery_price_per_km', 200)); ?>" 
                            min="0" step="10" style="width: 150px;" />
-                    <p class="description">Надбавка за каждый километр за МКАД</p>
+                    <p class="description">За каждый километр от склада в Санкт-Питербурге</p>
                 </td>
             </tr>
             
