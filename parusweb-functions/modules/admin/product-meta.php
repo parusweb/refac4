@@ -7,8 +7,10 @@
  * Настройки калькуляторов для товаров:
  * - Множитель цены
  * - Настройки калькулятора размеров (min/max/step)
- * - Формы фальшбалок
+ * - Настройки крепежа
  * - Цены форм верха штакетника
+ * 
+ * ВАЖНО: Метаполя фальшбалок вынесены в отдельный файл falsebalk-meta.php
  * 
  * @package ParusWeb_Functions
  * @subpackage Admin
@@ -113,7 +115,7 @@ function parusweb_add_calculator_settings() {
 }
 
 // ============================================================================
-// БЛОК 2A: НАСТРОЙКИ КАЛЬКУЛЯТОРА КРЕПЕЖА
+// БЛОК 3: НАСТРОЙКИ КАЛЬКУЛЯТОРА КРЕПЕЖА
 // ============================================================================
 
 add_action('woocommerce_product_options_general_product_data', 'parusweb_add_fastener_calculator_settings');
@@ -148,161 +150,6 @@ function parusweb_add_fastener_calculator_settings() {
     ]);
     
     echo '</div>';
-}
-
-// ============================================================================
-// БЛОК 3: ФОРМЫ ФАЛЬШБАЛОК
-// ============================================================================
-
-add_action('woocommerce_product_options_general_product_data', 'parusweb_add_falsebalk_shapes_fields');
-
-function parusweb_add_falsebalk_shapes_fields() {
-    global $post;
-    
-    if (!has_term(266, 'product_cat', $post->ID)) {
-        return;
-    }
-    
-    $shapes_data = get_post_meta($post->ID, '_falsebalk_shapes_data', true);
-    if (!is_array($shapes_data)) {
-        $shapes_data = [];
-    }
-    
-    $shapes = [
-        'g' => 'Г-образная',
-        'p' => 'П-образная',
-        'o' => 'О-образная'
-    ];
-    
-    ?>
-    <div class="options_group">
-        <h4 style="padding-left: 12px; color: #d63638; border-bottom: 2px solid #d63638; padding-bottom: 10px; margin-bottom: 15px;">🔨 Настройки фальшбалок</h4>
-        
-        <div style="padding: 0 12px;">
-            <p><strong>Настройте доступные формы сечений и их параметры:</strong></p>
-            
-            <?php foreach ($shapes as $shape_key => $shape_label): ?>
-                <?php
-                $shape_info = isset($shapes_data[$shape_key]) ? $shapes_data[$shape_key] : [];
-                $enabled = !empty($shape_info['enabled']);
-                ?>
-                
-                <div class="falsebalk-shape-section" style="border: 2px solid #ddd; padding: 15px; margin-bottom: 20px; border-radius: 5px; background: #f9f9f9;">
-                    <h5 style="margin-top: 0;">
-                        <label>
-                            <input type="checkbox" 
-                                   name="_falsebalk_shapes_data[<?php echo $shape_key; ?>][enabled]" 
-                                   value="1" 
-                                   <?php checked($enabled); ?>
-                                   class="falsebalk-shape-toggle"
-                                   data-shape="<?php echo $shape_key; ?>">
-                            <?php echo esc_html($shape_label); ?>
-                        </label>
-                    </h5>
-                    
-                    <div class="falsebalk-shape-fields" data-shape="<?php echo $shape_key; ?>" style="<?php echo !$enabled ? 'display:none;' : ''; ?>">
-                        
-                        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 15px;">
-                            <div>
-                                <label><strong>Ширина (мм)</strong></label><br>
-                                <input type="number" name="_falsebalk_shapes_data[<?php echo $shape_key; ?>][width_min]" 
-                                       placeholder="Мин" value="<?php echo esc_attr($shape_info['width_min'] ?? ''); ?>" 
-                                       style="width: 100%; margin-bottom: 5px;">
-                                <input type="number" name="_falsebalk_shapes_data[<?php echo $shape_key; ?>][width_max]" 
-                                       placeholder="Макс" value="<?php echo esc_attr($shape_info['width_max'] ?? ''); ?>" 
-                                       style="width: 100%; margin-bottom: 5px;">
-                                <input type="number" name="_falsebalk_shapes_data[<?php echo $shape_key; ?>][width_step]" 
-                                       placeholder="Шаг" value="<?php echo esc_attr($shape_info['width_step'] ?? ''); ?>" 
-                                       style="width: 100%;">
-                            </div>
-                            
-                            <div>
-                                <label><strong>Высота<?php echo $shape_key === 'p' ? ' 1' : ''; ?> (мм)</strong></label><br>
-                                <input type="number" name="_falsebalk_shapes_data[<?php echo $shape_key; ?>][height_min]" 
-                                       placeholder="Мин" value="<?php echo esc_attr($shape_info['height_min'] ?? ''); ?>" 
-                                       style="width: 100%; margin-bottom: 5px;">
-                                <input type="number" name="_falsebalk_shapes_data[<?php echo $shape_key; ?>][height_max]" 
-                                       placeholder="Макс" value="<?php echo esc_attr($shape_info['height_max'] ?? ''); ?>" 
-                                       style="width: 100%; margin-bottom: 5px;">
-                                <input type="number" name="_falsebalk_shapes_data[<?php echo $shape_key; ?>][height_step]" 
-                                       placeholder="Шаг" value="<?php echo esc_attr($shape_info['height_step'] ?? ''); ?>" 
-                                       style="width: 100%;">
-                            </div>
-                            
-                            <?php if ($shape_key === 'p'): ?>
-                            <div>
-                                <label><strong>Высота 2 (мм)</strong></label><br>
-                                <input type="number" name="_falsebalk_shapes_data[<?php echo $shape_key; ?>][height2_min]" 
-                                       placeholder="Мин" value="<?php echo esc_attr($shape_info['height2_min'] ?? ''); ?>" 
-                                       style="width: 100%; margin-bottom: 5px;">
-                                <input type="number" name="_falsebalk_shapes_data[<?php echo $shape_key; ?>][height2_max]" 
-                                       placeholder="Макс" value="<?php echo esc_attr($shape_info['height2_max'] ?? ''); ?>" 
-                                       style="width: 100%; margin-bottom: 5px;">
-                                <input type="number" name="_falsebalk_shapes_data[<?php echo $shape_key; ?>][height2_step]" 
-                                       placeholder="Шаг" value="<?php echo esc_attr($shape_info['height2_step'] ?? ''); ?>" 
-                                       style="width: 100%;">
-                            </div>
-                            <?php else: ?>
-                            <div></div>
-                            <?php endif; ?>
-                        </div>
-                        
-                        <div>
-                            <label><strong>Длина (м)</strong></label><br>
-                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;">
-                                <input type="number" step="0.01" name="_falsebalk_shapes_data[<?php echo $shape_key; ?>][length_min]" 
-                                       placeholder="Мин" value="<?php echo esc_attr($shape_info['length_min'] ?? ''); ?>" 
-                                       style="width: 100%;">
-                                <input type="number" step="0.01" name="_falsebalk_shapes_data[<?php echo $shape_key; ?>][length_max]" 
-                                       placeholder="Макс" value="<?php echo esc_attr($shape_info['length_max'] ?? ''); ?>" 
-                                       style="width: 100%;">
-                                <input type="number" step="0.01" name="_falsebalk_shapes_data[<?php echo $shape_key; ?>][length_step]" 
-                                       placeholder="Шаг" value="<?php echo esc_attr($shape_info['length_step'] ?? ''); ?>" 
-                                       style="width: 100%;">
-                            </div>
-                        </div>
-                        
-                        <div style="margin-top: 15px; padding: 10px; background: #fff3cd; border-left: 4px solid #ffc107;">
-                            <strong>Старый формат (через запятую):</strong> оставьте для обратной совместимости
-                            <div style="margin-top: 10px;">
-                                <label>Ширины:</label>
-                                <input type="text" name="_falsebalk_shapes_data[<?php echo $shape_key; ?>][widths]" 
-                                       placeholder="100, 120, 150" value="<?php echo esc_attr($shape_info['widths'] ?? ''); ?>" 
-                                       style="width: 100%; margin-bottom: 5px;">
-                                
-                                <label>Высоты:</label>
-                                <input type="text" name="_falsebalk_shapes_data[<?php echo $shape_key; ?>][heights]" 
-                                       placeholder="80, 100, 120" value="<?php echo esc_attr($shape_info['heights'] ?? ''); ?>" 
-                                       style="width: 100%; margin-bottom: 5px;">
-                                
-                                <label>Длины:</label>
-                                <input type="text" name="_falsebalk_shapes_data[<?php echo $shape_key; ?>][lengths]" 
-                                       placeholder="2.0, 2.5, 3.0" value="<?php echo esc_attr($shape_info['lengths'] ?? ''); ?>" 
-                                       style="width: 100%;">
-                            </div>
-                        </div>
-                        
-                    </div>
-                </div>
-                
-            <?php endforeach; ?>
-        </div>
-        
-        <script>
-        jQuery(document).ready(function($) {
-            $('.falsebalk-shape-toggle').on('change', function() {
-                const shape = $(this).data('shape');
-                const fields = $('.falsebalk-shape-fields[data-shape="' + shape + '"]');
-                if ($(this).is(':checked')) {
-                    fields.slideDown();
-                } else {
-                    fields.slideUp();
-                }
-            });
-        });
-        </script>
-    </div>
-    <?php
 }
 
 // ============================================================================
@@ -359,9 +206,12 @@ add_action('woocommerce_process_product_meta', 'parusweb_save_product_meta');
 
 function parusweb_save_product_meta($post_id) {
     
-    $multiplier = isset($_POST['_price_multiplier']) ? sanitize_text_field($_POST['_price_multiplier']) : '';
+    // Множитель цены
+    $multiplier = isset($_POST['_price_multiplier']) ? 
+        sanitize_text_field($_POST['_price_multiplier']) : '';
     update_post_meta($post_id, '_price_multiplier', $multiplier);
     
+    // Настройки калькулятора
     $calc_fields = [
         '_calc_width_min', '_calc_width_max', '_calc_width_step',
         '_calc_length_min', '_calc_length_max', '_calc_length_step'
@@ -372,36 +222,17 @@ function parusweb_save_product_meta($post_id) {
         update_post_meta($post_id, $field, $value);
     }
     
-    if (isset($_POST['_falsebalk_shapes_data'])) {
-        $shapes_data = [];
-        foreach ($_POST['_falsebalk_shapes_data'] as $shape_key => $shape_info) {
-            if (!empty($shape_info['enabled'])) {
-                $shapes_data[$shape_key] = [
-                    'enabled' => true,
-                    'width_min' => !empty($shape_info['width_min']) ? floatval($shape_info['width_min']) : '',
-                    'width_max' => !empty($shape_info['width_max']) ? floatval($shape_info['width_max']) : '',
-                    'width_step' => !empty($shape_info['width_step']) ? floatval($shape_info['width_step']) : '',
-                    'height_min' => !empty($shape_info['height_min']) ? floatval($shape_info['height_min']) : '',
-                    'height_max' => !empty($shape_info['height_max']) ? floatval($shape_info['height_max']) : '',
-                    'height_step' => !empty($shape_info['height_step']) ? floatval($shape_info['height_step']) : '',
-                    'length_min' => !empty($shape_info['length_min']) ? floatval($shape_info['length_min']) : '',
-                    'length_max' => !empty($shape_info['length_max']) ? floatval($shape_info['length_max']) : '',
-                    'length_step' => !empty($shape_info['length_step']) ? floatval($shape_info['length_step']) : '',
-                    'widths' => !empty($shape_info['widths']) ? sanitize_text_field($shape_info['widths']) : '',
-                    'heights' => !empty($shape_info['heights']) ? sanitize_text_field($shape_info['heights']) : '',
-                    'lengths' => !empty($shape_info['lengths']) ? sanitize_text_field($shape_info['lengths']) : '',
-                ];
-                
-                if ($shape_key === 'p') {
-                    $shapes_data[$shape_key]['height2_min'] = !empty($shape_info['height2_min']) ? floatval($shape_info['height2_min']) : '';
-                    $shapes_data[$shape_key]['height2_max'] = !empty($shape_info['height2_max']) ? floatval($shape_info['height2_max']) : '';
-                    $shapes_data[$shape_key]['height2_step'] = !empty($shape_info['height2_step']) ? floatval($shape_info['height2_step']) : '';
-                }
-            }
-        }
-        update_post_meta($post_id, '_falsebalk_shapes_data', $shapes_data);
+    // Настройки крепежа
+    $fastener_config = [];
+    if (isset($_POST['_fastener_enabled']) && $_POST['_fastener_enabled'] === 'yes') {
+        $fastener_config['enabled'] = true;
     }
+    if (isset($_POST['_fastener_coefficient'])) {
+        $fastener_config['coefficient'] = floatval($_POST['_fastener_coefficient']) ?: 2.7;
+    }
+    update_post_meta($post_id, '_fastener_config', $fastener_config);
     
+    // Цены форм верха штакетника
     $shape_prices = [
         '_shape_price_round',
         '_shape_price_triangle',
@@ -412,17 +243,6 @@ function parusweb_save_product_meta($post_id) {
         $value = isset($_POST[$field]) ? sanitize_text_field($_POST[$field]) : '';
         update_post_meta($post_id, $field, $value);
     }
-    
-        // Сохранение настроек крепежа
-    $fastener_config = [];
-    if (isset($_POST['_fastener_enabled']) && $_POST['_fastener_enabled'] === 'yes') {
-        $fastener_config['enabled'] = true;
-    }
-    if (isset($_POST['_fastener_coefficient'])) {
-        $fastener_config['coefficient'] = floatval($_POST['_fastener_coefficient']) ?: 2.7;
-    }
-    update_post_meta($post_id, '_fastener_config', $fastener_config);
-    
 }
 
 // ============================================================================
